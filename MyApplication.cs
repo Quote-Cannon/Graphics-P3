@@ -1,5 +1,7 @@
+using System;
 using System.Diagnostics;
 using OpenTK;
+using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 
 
@@ -16,9 +18,10 @@ namespace Template
 		Shader shader;                          // shader to use for rendering
 		Texture wood;                           // texture to use for rendering
 		SceneGraph sceneGraph;
+        Matrix4 zplus, zmin, xplus, xmin, CW, CCW;
 
-		// initialize
-		public void Init()
+        // initialize
+        public void Init()
 		{
 
 			// load teapot
@@ -59,8 +62,13 @@ namespace Template
 			int lightID = GL.GetUniformLocation(shader.programID, "lightPos");
 			GL.UseProgram(shader.programID);
 			GL.Uniform3(lightID, 0.0f, 0.0f, 0.0f);
-
-		}
+            zplus = Matrix4.CreateTranslation(new Vector3(0, 0, 0.2f));
+            zmin = Matrix4.CreateTranslation(new Vector3(0, 0, -0.2f));
+            xplus = Matrix4.CreateTranslation(new Vector3(0.2f, 0, 0));
+            xmin = Matrix4.CreateTranslation(new Vector3(-0.2f, 0, 0));
+            CW = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), -0.1f);
+            CCW = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0.1f);
+        }
 
 
 		// tick for background surface
@@ -68,7 +76,50 @@ namespace Template
 		{
 			screen.Clear( 0 );
 			screen.Print( "hello world", 2, 2, 0xffff00 );
-		}
+
+            //TODO: Multiply translations with a variable that stores the rotated angle
+            // implement controls
+            if (sceneGraph.zpos < 10)
+            {
+                if (Keyboard.GetState()[Key.W])
+                {
+                    sceneGraph.cameraMatrix = zplus * sceneGraph.cameraMatrix;
+                    Console.WriteLine("Y: " + sceneGraph.zpos);
+                }
+            }
+            else sceneGraph.zpos = 10f;
+            if (sceneGraph.zpos > -10)
+            {
+                if (Keyboard.GetState()[Key.S])
+                {
+                    sceneGraph.cameraMatrix = zmin * sceneGraph.cameraMatrix;
+                    Console.WriteLine("Y: " + sceneGraph.zpos);
+                }
+            }
+            else sceneGraph.zpos = -10f;
+            if (sceneGraph.xpos < 10)
+            {
+                if (Keyboard.GetState()[Key.A])
+                {
+                    sceneGraph.cameraMatrix = xplus * sceneGraph.cameraMatrix;
+                    Console.WriteLine("X: " + sceneGraph.xpos);
+                }
+            }
+            else sceneGraph.xpos = 10f;
+            if (sceneGraph.xpos > -10)
+            {
+                if (Keyboard.GetState()[Key.D])
+                {
+                    sceneGraph.cameraMatrix = xmin * sceneGraph.cameraMatrix;
+                    Console.WriteLine("X: " + sceneGraph.xpos);
+                }
+            }
+            else sceneGraph.xpos = -10f;
+            if (Keyboard.GetState()[Key.Q])
+                sceneGraph.cameraMatrix = CCW * sceneGraph.cameraMatrix;
+            if (Keyboard.GetState()[Key.E])
+                sceneGraph.cameraMatrix = CW * sceneGraph.cameraMatrix;
+        }
 
 		// tick for OpenGL rendering code
 		public void RenderGL()
@@ -77,13 +128,6 @@ namespace Template
 			float frameDuration = timer.ElapsedMilliseconds;
 			timer.Reset();
 			timer.Start();
-
-			// prepare matrix for vertex shader
-			float angle90degrees = PI / 2;
-			//Matrix4 Tpot = sceneGraph.createMatrix(mesh);           //Matrix4.CreateScale( 0.5f ) * Matrix4.CreateFromAxisAngle( new Vector3( 0, 1, 0 ), a );
-			//Matrix4 Tfloor = sceneGraph.createMatrix(floor);        //Matrix4.CreateScale( 4.0f ) * Matrix4.CreateFromAxisAngle( new Vector3( 0, 1, 0 ), a );
-			//Matrix4 Tcamera = sceneGraph.cameraMatrix;			//Matrix4.CreateTranslation( new Vector3( 0, -14.5f, 0 ) ) * Matrix4.CreateFromAxisAngle( new Vector3( 1, 0, 0 ), angle90degrees );
-			//Matrix4 Tview = Matrix4.CreatePerspectiveFieldOfView( 1.2f, 1.3f, .1f, 1000 );
 
 			// update rotation
 			a += 0.001f * frameDuration;
