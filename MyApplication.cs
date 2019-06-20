@@ -19,6 +19,8 @@ namespace Template
 		Texture wood;                           // texture to use for rendering
 		SceneGraph sceneGraph;
         Matrix4 zplus, zmin, xplus, xmin, CW, CCW;
+        Matrix4 identitycamera;
+        float x = 1, y = 1, rotation = 1;
 
         // initialize
         public void Init()
@@ -61,13 +63,14 @@ namespace Template
 			// set the light
 			int lightID = GL.GetUniformLocation(shader.programID, "lightPos");
 			GL.UseProgram(shader.programID);
-			GL.Uniform3(lightID, 0.0f, 0.0f, 0.0f);
-            zplus = Matrix4.CreateTranslation(new Vector3(0, 0, 0.2f));
+			GL.Uniform3(lightID, 5.0f, 5f, 0.0f);
+            
             zmin = Matrix4.CreateTranslation(new Vector3(0, 0, -0.2f));
             xplus = Matrix4.CreateTranslation(new Vector3(0.2f, 0, 0));
             xmin = Matrix4.CreateTranslation(new Vector3(-0.2f, 0, 0));
             CW = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), -0.1f);
             CCW = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), 0.1f);
+            identitycamera = Matrix4.CreateTranslation(new Vector3(0, -14.5f, 0)) * Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), (float)Math.PI/2);
         }
 
 
@@ -76,15 +79,15 @@ namespace Template
 		{
 			screen.Clear( 0 );
 			screen.Print( "hello world", 2, 2, 0xffff00 );
-
+            sceneGraph.cameraMatrix = identitycamera * Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rotation) * Matrix4.CreateTranslation(new Vector3(y, x, 0));
             //TODO: Multiply translations with a variable that stores the rotated angle
             // implement controls
             if (sceneGraph.cameraMatrix.M42 > -7f)
             {
                 if (Keyboard.GetState()[Key.W])
                 {
-                    sceneGraph.cameraMatrix = zplus * sceneGraph.cameraMatrix;
-                    Console.WriteLine("Y: " + sceneGraph.cameraMatrix.M42);
+                    x -= 0.1f;
+                    Console.WriteLine("Y: " + x);
                 }
             }
             else sceneGraph.cameraMatrix.M42 = -7f;
@@ -92,8 +95,8 @@ namespace Template
             {
                 if (Keyboard.GetState()[Key.S])
                 {
-                    sceneGraph.cameraMatrix = zmin * sceneGraph.cameraMatrix;
-                    Console.WriteLine("Y: " + sceneGraph.cameraMatrix.M42);
+                    x += 0.1f;
+                    Console.WriteLine("Y: " + x);
                 }
             }
             else sceneGraph.cameraMatrix.M42 = 7f;
@@ -101,8 +104,8 @@ namespace Template
             {
                 if (Keyboard.GetState()[Key.A])
                 {
-                    sceneGraph.cameraMatrix = xplus * sceneGraph.cameraMatrix;
-                    Console.WriteLine("X: " + sceneGraph.cameraMatrix.M41);
+                    y += 0.1f;
+                    Console.WriteLine("X: " + y);
                 }
             }
             else sceneGraph.cameraMatrix.M41 = 9f;
@@ -110,15 +113,19 @@ namespace Template
             {
                 if (Keyboard.GetState()[Key.D])
                 {
-                    sceneGraph.cameraMatrix = xmin * sceneGraph.cameraMatrix;
-                    Console.WriteLine("X: " + sceneGraph.cameraMatrix.M41);
+                    y -= 0.1f;
+                    Console.WriteLine("X: " + y);
                 }
             }
             else sceneGraph.cameraMatrix.M41 = -9f;
             if (Keyboard.GetState()[Key.Q])
-                sceneGraph.cameraMatrix = CCW * sceneGraph.cameraMatrix;
+            {
+                rotation += 0.05f;
+            }
             if (Keyboard.GetState()[Key.E])
-                sceneGraph.cameraMatrix = CW * sceneGraph.cameraMatrix;
+            {
+                rotation -= 0.05f;
+            }
         }
 
 		// tick for OpenGL rendering code
@@ -133,9 +140,9 @@ namespace Template
 			a += 0.001f * frameDuration;
 			if( a > 2 * PI ) a -= 2 * PI;
 
-			// render scene
+            // render scene
+            floor.Render( shader, sceneGraph.createMatrix(floor,a), floor.toWorld, wood );
 			mesh.Render( shader, sceneGraph.createMatrix(mesh,a), mesh.toWorld, wood );
-			floor.Render( shader, sceneGraph.createMatrix(floor,a), floor.toWorld, wood );
 			meshI.Render(shader, sceneGraph.createMatrix(meshI, a), meshI.toWorld, wood);
 			meshII.Render(shader, sceneGraph.createMatrix(meshII, a), meshII.toWorld, wood);
 			meshIII.Render(shader, sceneGraph.createMatrix(meshIII, a), meshIII.toWorld, wood);
