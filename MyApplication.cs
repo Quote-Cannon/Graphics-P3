@@ -79,42 +79,42 @@ namespace Template
 
             //TODO: Multiply translations with a variable that stores the rotated angle
             // implement controls
-            if (sceneGraph.zpos < 10)
+            if (sceneGraph.cameraMatrix.M42 > -7f)
             {
                 if (Keyboard.GetState()[Key.W])
                 {
                     sceneGraph.cameraMatrix = zplus * sceneGraph.cameraMatrix;
-                    Console.WriteLine("Y: " + sceneGraph.zpos);
+                    Console.WriteLine("Y: " + sceneGraph.cameraMatrix.M42);
                 }
             }
-            else sceneGraph.zpos = 10f;
-            if (sceneGraph.zpos > -10)
+            else sceneGraph.cameraMatrix.M42 = -7f;
+            if (sceneGraph.cameraMatrix.M42 < 7f)
             {
                 if (Keyboard.GetState()[Key.S])
                 {
                     sceneGraph.cameraMatrix = zmin * sceneGraph.cameraMatrix;
-                    Console.WriteLine("Y: " + sceneGraph.zpos);
+                    Console.WriteLine("Y: " + sceneGraph.cameraMatrix.M42);
                 }
             }
-            else sceneGraph.zpos = -10f;
-            if (sceneGraph.xpos < 10)
+            else sceneGraph.cameraMatrix.M42 = 7f;
+            if (sceneGraph.cameraMatrix.M41 < 9f)
             {
                 if (Keyboard.GetState()[Key.A])
                 {
                     sceneGraph.cameraMatrix = xplus * sceneGraph.cameraMatrix;
-                    Console.WriteLine("X: " + sceneGraph.xpos);
+                    Console.WriteLine("X: " + sceneGraph.cameraMatrix.M41);
                 }
             }
-            else sceneGraph.xpos = 10f;
-            if (sceneGraph.xpos > -10)
+            else sceneGraph.cameraMatrix.M41 = 9f;
+            if (sceneGraph.cameraMatrix.M41 > -9f)
             {
                 if (Keyboard.GetState()[Key.D])
                 {
                     sceneGraph.cameraMatrix = xmin * sceneGraph.cameraMatrix;
-                    Console.WriteLine("X: " + sceneGraph.xpos);
+                    Console.WriteLine("X: " + sceneGraph.cameraMatrix.M41);
                 }
             }
-            else sceneGraph.xpos = -10f;
+            else sceneGraph.cameraMatrix.M41 = -9f;
             if (Keyboard.GetState()[Key.Q])
                 sceneGraph.cameraMatrix = CCW * sceneGraph.cameraMatrix;
             if (Keyboard.GetState()[Key.E])
