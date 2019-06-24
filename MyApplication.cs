@@ -18,16 +18,16 @@ namespace Template
 		Shader shader;                          // shader to use for rendering
 		Texture wood;                           // texture to use for rendering
 		SceneGraph sceneGraph;
-        Matrix4 zplus, zmin, xplus, xmin, CW, CCW;
+        Light light1, light2;
+        Matrix4 zmin, xplus, xmin, CW, CCW;
         Matrix4 identitycamera;
-        float x = 1, y = 1, rotation = 1;
+        float x = 1, y = 1, z = 1, rotation = 1;
 
         // initialize
         public void Init()
 		{
-
 			// load teapot
-			mesh = new Mesh( "../../assets/teapot.obj" );
+			mesh = new Mesh( "../../assets/table.obj" );
 			meshI = new Mesh("../../assets/teapot.obj");
 			meshII = new Mesh("../../assets/teapot.obj");
 			meshIII = new Mesh("../../assets/teapot.obj");
@@ -60,11 +60,10 @@ namespace Template
 			floor.translation = new Vector3(0f, 0f, 0);
 			mesh.translation = new Vector3(0f, 0f, 0f);
 			mesh.turn = new Vector3(0, 1, 0);
-			// set the light
-			int lightID = GL.GetUniformLocation(shader.programID, "lightPos");
-			GL.UseProgram(shader.programID);
-			GL.Uniform3(lightID, 5.0f, 5f, 0.0f);
-            
+            // set the light
+            light1 = new Light(shader, new Vector3(0.0f, 5f, 15.0f), 0);
+            light2  = new Light(shader, new Vector3(5.0f, 10.0f, 0.0f), 0);
+            //define modifiers
             zmin = Matrix4.CreateTranslation(new Vector3(0, 0, -0.2f));
             xplus = Matrix4.CreateTranslation(new Vector3(0.2f, 0, 0));
             xmin = Matrix4.CreateTranslation(new Vector3(-0.2f, 0, 0));
@@ -78,46 +77,47 @@ namespace Template
 		public void Tick()
 		{
 			screen.Clear( 0 );
-			screen.Print( "hello world", 2, 2, 0xffff00 );
-            sceneGraph.cameraMatrix = identitycamera * Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rotation) * Matrix4.CreateTranslation(new Vector3(y, x, 0));
+			screen.Print( "hello there", 2, 2, 0xffff00 );
+            screen.Print("general kenobi", 2, 12, 0xffff00);
+            sceneGraph.cameraMatrix = identitycamera * Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rotation) * Matrix4.CreateTranslation(new Vector3(x, y, z));
             //TODO: Multiply translations with a variable that stores the rotated angle
             // implement controls
-            if (sceneGraph.cameraMatrix.M42 > -7f)
+            if (y > -7f)
             {
                 if (Keyboard.GetState()[Key.W])
                 {
-                    x -= 0.1f;
-                    Console.WriteLine("Y: " + x);
+                    y -= 0.1f;
+                    Console.WriteLine("Y: " + y);
                 }
             }
-            else sceneGraph.cameraMatrix.M42 = -7f;
-            if (sceneGraph.cameraMatrix.M42 < 7f)
+            else y = -7f;
+            if (y < 7f)
             {
                 if (Keyboard.GetState()[Key.S])
                 {
-                    x += 0.1f;
-                    Console.WriteLine("Y: " + x);
+                    y += 0.1f;
+                    Console.WriteLine("Y: " + y);
                 }
             }
-            else sceneGraph.cameraMatrix.M42 = 7f;
-            if (sceneGraph.cameraMatrix.M41 < 9f)
+            else y = 7f;
+            if (x < 9f)
             {
                 if (Keyboard.GetState()[Key.A])
                 {
-                    y += 0.1f;
-                    Console.WriteLine("X: " + y);
+                    x += 0.1f;
+                    Console.WriteLine("X: " + x);
                 }
             }
-            else sceneGraph.cameraMatrix.M41 = 9f;
-            if (sceneGraph.cameraMatrix.M41 > -9f)
+            else x = 9f;
+            if (x > -9f)
             {
                 if (Keyboard.GetState()[Key.D])
                 {
-                    y -= 0.1f;
-                    Console.WriteLine("X: " + y);
+                    x -= 0.1f;
+                    Console.WriteLine("X: " + x);
                 }
             }
-            else sceneGraph.cameraMatrix.M41 = -9f;
+            else x = -9f;
             if (Keyboard.GetState()[Key.Q])
             {
                 rotation += 0.05f;
@@ -125,6 +125,20 @@ namespace Template
             if (Keyboard.GetState()[Key.E])
             {
                 rotation -= 0.05f;
+            }
+            if (z < 22f)
+            {
+                if (Keyboard.GetState()[Key.ShiftLeft])
+                {
+                    z+= 0.1f;
+                    Console.WriteLine("Z: " + z);
+                }
+            }
+            else z = 22f;
+            if (Keyboard.GetState()[Key.Space])
+            {
+                z -= 0.1f;
+                Console.WriteLine("Z: " + z);
             }
         }
 
@@ -150,4 +164,14 @@ namespace Template
 			//floor.Render(shader, Tfloor * Tcamera * Tview, wood);
 		}
 	}
+
+    class Light
+    {
+        public Light(Shader s, Vector3 color, int posMod)
+        {
+            int lightID = GL.GetUniformLocation(s.programID, "lightPos");
+            GL.UseProgram(s.programID);
+            GL.Uniform3(lightID, 5.0f, 5f, 0.0f);
+        }
+    }
 }

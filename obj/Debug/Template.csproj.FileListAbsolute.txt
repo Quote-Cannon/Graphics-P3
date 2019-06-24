@@ -31,3 +31,14 @@ C:\Users\Heijboer\OneDrive\Uni\GitHub\Graphics-P3\obj\Debug\Template.csproj.Core
 C:\Users\Heijboer\OneDrive\Uni\GitHub\Graphics-P3\obj\Debug\Template.csproj.CopyComplete
 C:\Users\Heijboer\OneDrive\Uni\GitHub\Graphics-P3\obj\Debug\INFOGR2019Tmpl8.exe
 C:\Users\Heijboer\OneDrive\Uni\GitHub\Graphics-P3\obj\Debug\INFOGR2019Tmpl8.pdb
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\bin\Debug\INFOGR2019Tmpl8.exe.config
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\bin\Debug\INFOGR2019Tmpl8.exe
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\bin\Debug\INFOGR2019Tmpl8.pdb
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\bin\Debug\OpenTK.dll
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\bin\Debug\OpenTK.pdb
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\bin\Debug\OpenTK.xml
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\obj\Debug\Template.csprojAssemblyReference.cache
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\obj\Debug\Template.csproj.CoreCompileInputs.cache
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\obj\Debug\Template.csproj.CopyComplete
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\obj\Debug\INFOGR2019Tmpl8.exe
+C:\Users\User\OneDrive\Uni\GitHub\Graphics-P3\obj\Debug\INFOGR2019Tmpl8.pdb
