@@ -18,8 +18,8 @@ namespace Template
 		int quadBufferId;                       // quad buffer
 		public Matrix4 modelView;               // model view matrix
 		public Mesh parentMesh;                 // parent mesh id
-		public Vector3 turn;
-		public Vector3 translation;
+		public Vector3 turn;					// turning speed
+		public Vector3 translation;				// translation
 		public float turningspeed = 1;
 		public Matrix4 toWorld = new Matrix4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 		// constructor

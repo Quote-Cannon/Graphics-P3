@@ -16,7 +16,7 @@ namespace Template
 		float a = 0;                            // teapot rotation angle
 		Stopwatch timer;                        // timer for measuring frame duration
 		Shader shader;                          // shader to use for rendering
-		Texture wood;                           // texture to use for rendering
+		Texture wood, horde;                    // texture to use for rendering
 		SceneGraph sceneGraph;
         Light light1, light2;
         Matrix4 zmin, xplus, xmin, CW, CCW;
@@ -40,14 +40,16 @@ namespace Template
 			shader = new Shader( "../../shaders/vs.glsl", "../../shaders/fs.glsl" );
 			// load a texture
 			wood = new Texture( "../../assets/wood.jpg" );
+			horde = new Texture( "../../assets/horde.jpg" );
 			sceneGraph = new SceneGraph();
 			sceneGraph.assign(mesh, floor);
 			sceneGraph.assign(meshI, mesh);
 			sceneGraph.assign(meshII, meshI);
 			sceneGraph.assign(meshIII, meshII);
 			floor.modelView = Matrix4.CreateScale(4.0f);
-			mesh.modelView = Matrix4.CreateScale(0.1f);
-			meshI.modelView = Matrix4.CreateScale(0.8f);
+			mesh.modelView = Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)Math.PI) * Matrix4.CreateScale(0.1f);
+			meshI.modelView = Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), (float)Math.PI) * Matrix4.CreateScale(0.5f);
+			//mesh.
 			meshI.turn = new Vector3(0, 1, 0);
 			meshI.translation = new Vector3(0, 0f, 20f);
 			meshII.modelView = Matrix4.CreateScale(0.8f);
@@ -56,10 +58,10 @@ namespace Template
 			meshIII.modelView = Matrix4.CreateScale(0.8f);
 			meshIII.turn = new Vector3(0, 1, 0);
 			meshIII.translation = new Vector3(0, 0f, 20f);
-			floor.turn = new Vector3(0, 1, 0);
+			//floor.turn = new Vector3(0, 1, 0);
 			floor.translation = new Vector3(0f, 0f, 0);
 			mesh.translation = new Vector3(0f, 0f, 0f);
-			mesh.turn = new Vector3(0, 1, 0);
+			mesh.turn = new Vector3(0, 0, 0);
             // set the light
             light1 = new Light(shader, new Vector3(0.0f, 5f, 15.0f), 0);
             light2  = new Light(shader, new Vector3(5.0f, 10.0f, 0.0f), 0);
@@ -156,7 +158,7 @@ namespace Template
 
             // render scene
             floor.Render( shader, sceneGraph.createMatrix(floor,a), floor.toWorld, wood );
-			mesh.Render( shader, sceneGraph.createMatrix(mesh,a), mesh.toWorld, wood );
+			mesh.Render( shader, sceneGraph.createMatrix(mesh,a), mesh.toWorld, horde );
 			meshI.Render(shader, sceneGraph.createMatrix(meshI, a), meshI.toWorld, wood);
 			meshII.Render(shader, sceneGraph.createMatrix(meshII, a), meshII.toWorld, wood);
 			meshIII.Render(shader, sceneGraph.createMatrix(meshIII, a), meshIII.toWorld, wood);
